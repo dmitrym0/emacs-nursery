@@ -1,0 +1,38 @@
+* Emacs Nursery
+** [[file:dm-dueapp-integration.el][dm-dueapp-integration]]
+Sends the headline under cursor to [[https://www.dueapp.com][DueApp]] for never ending nagging.
+** [[file:README.org][dm-dynamic-blocks]]
+Create dynamic block to list overdue tasks:
+
+ #+BEGIN: dm/list-overdue-items
+ #+END:
+** [[file:dm-gptel-org-summary.el][dm-gptel-org-summary]]
+Summarize today's log via ChatGPT.
+
+Grab todays org-roam daily file, send it to ChatGPT via [[https://github.com/karthink/gptel][gptel]] and insert the summary.
+** [[file:dm-jira.el][dm-jira]]
+Utility function for dealing with JIRA tickets.
+
+Primarily =dm/get-and-insert-jira-ticket=. It looks through the current spring (fetcha via [[https://github.com/ahungry/org-jira][org-jira]]) and presents a completing read.
+
+I use it to quickly find tickets I'm responsible for.
+
+There's also =dm/thing-to-mex-link= that turns JIRA tickets into clickable links. Handy for reports and such.
+
+** [[file:dm-org-journal-in-current-buffer.el][dm-org-journal-in-current-buffer]]
+Attempt at quick logging in org-roam's daily note.
+
+** [[file:dm-org-roam.el][dm-org-roam]]
+=dm/tag-to-org-link= creates a link to an org-roam node based on the thing under cursor.:w
+
+** [[file:org-sie.el][org-sie]]
+
+SIE = simple incremental everything.
+
+Use spaced repetition as a way to schedule org documents for review.
+
+Inverses typical spaced repetition meaning. Instead of having =1= mean "poor recall", I use =1= to mean "I want to review this soon".
+
+Relies on [[https://github.com/brabalan/org-review][org-review]] and org-drill.
+
+Uses org-drill's scheduling algorithm to set next review dates based on "interest".
