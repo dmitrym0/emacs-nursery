@@ -54,5 +54,29 @@
       (setq id (org-id-get-create))
       (write-file filename)
       (org-roam-db-update-file filename)
-      (format "[[id:%s][%s]]" id s)
-      (org-roam-node-from-title-or-alias s))))
+      ;; (format "[[id:%s][%s]]" id s)
+      ;; (org-roam-node-from-title-or-alias s)
+      )
+    filename))
+
+
+
+(defun dm/org-roam-fast-make-node-with-title (s)
+  ;; https://emacs.stackexchange.com/questions/73158/how-to-programmatically-create-a-new-org-roam-file
+  "Make an org-roam node with title S and return it's file path."
+  (let* ((slug (org-roam-node-slug (org-roam-node-create :title s)))
+         (filename (format "%s/%s.org"
+                           (expand-file-name org-roam-directory)
+                           slug))
+         (org-id-overriding-file-name filename)
+         id)
+    (with-temp-buffer
+      (insert ":PROPERTIES:\n:ID:        \n:END:\n#+title: "
+              s)
+      (goto-char 25)
+      (org-mode)
+      (setq id (org-id-get-create))
+      (write-file filename)
+      (org-roam-db-update-file filename)
+      )
+    filename))

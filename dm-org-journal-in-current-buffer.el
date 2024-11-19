@@ -44,6 +44,7 @@ and appends an inactive time stamp to it."
 
 ;;(define-key org-mode-map (kbd "C-c d h") #'org-insert-new-date-in-log)
 (define-key org-mode-map (kbd "C-c d h") #'dm/log-to-daily)
+(define-key org-mode-map (kbd "C-c d H") #'org-insert-new-date-in-log)
 
 (defvar current-buffer-journal-mode-map (make-sparse-keymap)
   "Keymap while current-buffer-journal mode is active.")

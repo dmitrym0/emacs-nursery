@@ -2,6 +2,7 @@
 (require 'ht)
 
 
+(setq sprint-file "~/.org-jira/mex-current-sprint.org")
 
 
 (defun dm/jira-get-heading-and-tags ()
@@ -96,10 +97,45 @@
   )
 
 
+(defun dm/add-todo-to-top-level-headings ()
+  "Add TODO keyword to every top-level heading in the current Org buffer."
+  (interactive)
+  (org-map-entries
+   (lambda ()
+     (when (= (org-current-level) 1)
+       (unless (org-get-todo-state)
+         (org-todo 'todo))))
+   t 'file))
+
+
+(defun dm/update-sprint-file ()
+  "update the sprint file from jira"
+  (interactive)
+  (save-excursion
+    (find-file sprint-file)
+    ;; delete contents of sprint-file
+    (delete-region (point-min) (point-max))
+    (org-jira-get-issues-from-custom-jql)
+    (org-jira-get-issues-from-custom-jql)
+    ))
+
+
+
 
 (keymap-set embark-identifier-map "D" #'dm/thing-to-mex-link)
 (keymap-set embark-org-item-map "D" #'dm/thing-to-mex-link)
 (keymap-set embark-general-map "D" #'dm/thing-to-mex-link)
+
+(defun dm/add-todo-to-top-level-headings-on-file-change (event)
+  (message "File changed %s" event)
+  (save-excursion
+    (find-file sprint-file)
+    (dm/add-todo-to-top-level-headings)
+    (save-buffer)))
+
+(file-notify-add-watch sprint-file
+                             '(change attribute-change)
+                             #'dm/add-todo-to-top-level-headings-on-file-change)
 
 
 (provide 'dm-jira)

@@ -12,7 +12,7 @@
   "Update =org-agenda-files= with files that actually have a TODO heading."
   (interactive)
   (setq org-agenda-files (flatten-tree
-                          (append (dm/get-agenda-files-with-keyword "\\*\\s+TODO") `(,(concat org-directory "gcal.org") ,(concat org-directory "vt-cal.org"))))))
+                          (append (dm/get-agenda-files-with-keyword "\\*\\s+TODO") `(,(concat org-directory "gcal.org") ,(concat org-directory "vt_cal.org"))))))
 
 (defun dm/update-agenda-file-list-with-keyword (keyword)
   (setq org-agenda-files (dm/get-agenda-files-with-keyword keyword)))

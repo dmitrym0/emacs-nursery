@@ -1,3 +1,11 @@
+(require 'ts)
+(require 'gptel)
+
+(defun dm/insert-date-tree-week-for-date (org-date-string)
+  (let* ((ts-date (ts-parse-org org-date-string))
+         (date (list (ts-month ts-date) (ts-day ts-date) (ts-year ts-date))))
+    (org-datetree-find-iso-week-create date)))
+
   (defun dm/extract-content-below-headline (headline)
     "Grab the content between a top level headline HEADLINE and the next headline"
     (save-excursion
@@ -28,7 +36,6 @@
     (interactive)
     ;; (let ((selection (buffer-substring-no-properties (region-beginning) (region-end))))
     (let ((selection (dm/extract-content-below-headline "Tasks")))
-      (message selection)
       (gptel-request
           (concat (dm/get-summary-prompt) selection)
         :buffer (current-buffer)
@@ -36,21 +43,23 @@
         (lambda (response info)
           (if (not response)
               (message "ChatGPT response failed with: %s" (plist-get info :status))
-            (let* ((bounds nil))
-              (with-current-buffer (current-buffer)
+            (let* ((daily-title (org-roam-node-title (org-roam-node-at-point)))
+                   (node-id (org-roam-node-id (org-roam-node-at-point))))
                 (save-excursion
-                  (goto-char (point-max))
-                  (insert "* SUMMARY\n")
+                  (find-file "~/org-roam/weekly_work_summary_2024.org")
+                  (dm/insert-date-tree-week-for-date daily-title)
+                  (end-of-line)
+                  (insert "\n")
                   (insert (dm/post-process-summary response))
-                  (message "--- DONE --- ")))))))))
+                  (message "--- DONE --- "))))))))
 
 
   (defun dm/post-process-summary (summary)
     (with-temp-buffer
       (insert summary)
       (goto-char 0)
-      (while (re-search-forward "MEX-\d*" nil t)
-        (evil-forward-word-end)
+      (while (re-search-forward "\\(MEX-\\|CAC-\\)[0-9]*" nil t)
+        (backward-char)
         (dm/thing-to-mex-link)
         (end-of-line))
       (buffer-string)))
